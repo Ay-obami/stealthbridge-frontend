@@ -28,3 +28,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md). Public backend must use HTTPS, should be beh
 - `npx skills add shadcn-ui/ui@shadcn`
 
 Review remote installers/source before running on developer machines.
+
+## Brand consistency
+
+The approved logo is shared by the organization community repository and mirrored as `public/brand/stealthbridge-logo.svg` and `public/brand/stealthbridge-symbol.svg`. UI navigation and favicon use the same traced ribbon symbol. Avoid introducing alternate monograms.

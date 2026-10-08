@@ -11,4 +11,4 @@ Choose one of the scoped [issues](https://github.com/stealthbridge-labs/stealthb
 - Never collect seed phrases, hidden notes, payment witnesses or personal financial details.
 - Do not add wallet signing/deposit/payment actions without a reviewed protocol and security ADR.
 
-Read [design system](docs/DESIGN-SYSTEM.md) and [deployment spec](docs/DEPLOYMENT.md). Licensing and security contacts will be finalized as part of Drips readiness; discuss significant external dependency and licensing changes with maintainers.
+Read [design system](docs/DESIGN-SYSTEM.md) and [deployment spec](docs/DEPLOYMENT.md). Licensing and security contacts will be finalized as the project matures; discuss significant external dependency and licensing changes with maintainers.

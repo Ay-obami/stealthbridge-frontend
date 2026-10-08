@@ -1,5 +1,7 @@
 # StealthBridge Frontend
 
+<div align="center"><img src="public/brand/stealthbridge-logo.svg" alt="StealthBridge — Confidential payments. Without borders." width="540" /></div>
+
 **Confidential payments. Without borders.** Next.js 16 / TypeScript 7 / Tailwind CSS 4 / Freighter / GSAP.
 
 [Business](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/business) · [Send](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/send) · [Backend API](https://github.com/stealthbridge-labs/stealthbridge-backend) · [Contracts](https://github.com/stealthbridge-labs/stealthbridge-contracts) · [SDK](https://github.com/stealthbridge-labs/stealthbridge-sdk)
@@ -51,4 +53,4 @@ The SDK provides equivalent typed read-only methods. Integrating a published SDK
 ## Status and contribution
 Frontend and SDK CI provide remote build validation. Do not claim live payment flows, partner support, security audits, or production readiness.
 
-View [contribution guidance](CONTRIBUTING.md). An open-source license is still being selected before Drips onboarding. Only contribute non-sensitive research/code while the security policy is finalized.
+View [contribution guidance](CONTRIBUTING.md). Licensing decisions are documented through the project's open development governance. Only contribute non-sensitive research/code while the security policy is finalized.

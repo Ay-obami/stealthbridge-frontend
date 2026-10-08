@@ -1,6 +1,6 @@
-# Open-source and Drips readiness plan
+# Open development readiness
 
-**Do not open funding issues or register services yet.** This is a preparation document.
+This document tracks code quality, contributor onboarding and open development milestones.
 
 ## Foundation before public contribution onboarding
 - [x] Establish separate frontend, backend, contracts and SDK repositories.
@@ -12,7 +12,7 @@
 - [ ] Pin dependency lockfiles and reproduce CI results.
 - [ ] Complete Stellar privacy feasibility proofs, publish verified contract IDs/tx hashes and explicit limitations.
 - [ ] Add contributor onboarding, issue labels/templates and small self-contained starter tasks.
-- [ ] Only then assess Drips project eligibility, payout addresses and governance.
+- [ ] Publish release notes and contribution milestones when the project meets technical readiness criteria.
 
 ## Documentation truth standard
 Clearly label planned vs implemented vs deployed vs audited. Do not invent fees, assets, transfer statistics, partner relationships or compliance certification.
