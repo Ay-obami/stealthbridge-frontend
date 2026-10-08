@@ -4,7 +4,7 @@ const allowed = new Set(["health","v1/network","v1/capabilities","v1/corridors"]
 export async function GET(_request:NextRequest,context:{params:Promise<{parts:string[]}>}){
  const {parts}=await context.params;
  const path=parts.join("/");
- if(!allowed.has(path)) return NextResponse.json({code:"NOT_FOUND"},{status:404});
+ if(!allowed.has(path) && !/^v1\/transactions\/[a-f0-9]{64}$/i.test(path)) return NextResponse.json({code:"NOT_FOUND"},{status:404});
  const base=process.env.STEALTHBRIDGE_API_URL;
  if(!base) return NextResponse.json({code:"API_UNCONFIGURED",message:"Configure STEALTHBRIDGE_API_URL on the frontend server."},{status:503});
  try{
