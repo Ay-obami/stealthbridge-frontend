@@ -1,79 +1,54 @@
 # StealthBridge Frontend
 
-<p align="center"><strong>StealthBridge</strong><br/><em>Confidential payments. Without borders.</em></p>
+**Confidential payments. Without borders.** Next.js 16 / TypeScript 7 / Tailwind CSS 4 / Freighter / GSAP.
 
-**StealthBridge** is an open-source-in-progress, testnet-first confidential cross-border payment platform on Stellar. This repository owns the web experience for two product lines:
+[Business](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/business) · [Send](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/send) · [Backend API](https://github.com/stealthbridge-labs/stealthbridge-backend) · [Contracts](https://github.com/stealthbridge-labs/stealthbridge-contracts) · [SDK](https://github.com/stealthbridge-labs/stealthbridge-sdk)
 
-- **StealthBridge Business** — institutional settlements where participants are known but payment amounts should remain confidential.
-- **StealthBridge Send** — consumer remittances that aim to protect payment amounts and relationships between senders and receivers.
+## Current functionality
+- Animated product landing and two separate Business and Send workspaces.
+- **Actual Stellar Testnet ledger data** fetched from the configured backend; the backend verifies the RPC network passphrase.
+- **Real operator-configured corridors** fetched from backend PostgreSQL, or explicit unavailable / empty states.
+- Freighter browser wallet public-address connection and Testnet passphrase validation.
+- Honest capabilities: fund-moving flows remain disabled until cryptographic integrations are verified.
+- No mock transfers, seeded FX rates, hardcoded countries/partners, or fake balances.
 
-> [!IMPORTANT]
-> This repository contains a **working frontend design/code scaffold**, not an operational payment system. The Business and Send pages are strictly local simulations. No live FX quotes, ZK proofs, Soroban transactions, fiat payouts, wallet signatures, or custody operations have been demonstrated. **Never use real funds.**
+**Important:** A connected RPC or wallet does **not** mean confidential transfers, real remittances, KYC, fiat payout, or asset custody work. Payment submission is intentionally unavailable. No real money.
 
-## View the product surfaces
+## Run locally
 
-| Path | Surface | Status |
-| --- | --- | --- |
-| \`/\` | Editorial landing page, animated corridor intelligence board and product switch | Implemented preview |
-| \`/business\` | Configurable B2B settlement simulation and lifecycle explanation | Demo only |
-| \`/send\` | Configurable remittance simulation and privacy explanation | Demo only |
+Requires Node.js 22+, your own running StealthBridge backend, and public Stellar Testnet RPC connectivity.
 
-Design narrative: *Move value. Not exposure.* A distinctive corridor visualization replaces generic crypto metrics. All motion must communicate flow, never fabricate transaction success.
-
-## Stack
-- Next.js 16, App Router
-- React 19
-- TypeScript 7 target
-- Tailwind CSS 4
-- shadcn-compatible local components and \`components.json\` (full CLI/registry setup still requires dependency installation)
-- GSAP for intentional entrance and route animations
-- lucide-react icons
-
-## Quick start
-Requires Node.js 22+ and an internet-enabled dependency installation environment.
-\`\`\`bash
+```bash
 npm install
 cp .env.example .env.local
+npm run typecheck
+npm run build
 npm run dev
-\`\`\`
-Open \`http://localhost:3000\`. For validation, run \`npm run typecheck\` and \`npm run build\` after installing dependencies.
+```
 
-No dependency installation, build, live browser render, or CI test was executed by this GitHub commit; the source is an implementation candidate awaiting validation. See [Development Notes](docs/DEVELOPMENT.md).
+Frontend server env variable: `STEALTHBRIDGE_API_URL=http://localhost:8080` for local development, or your HTTPS backend URL in hosting. It is server-only; the Next API route allows only `/health`, `/v1/network`, `/v1/capabilities`, `/v1/corridors` and does not forward arbitrary requests.
 
-## Structure
-\`\`\`
-src/
-  app/
-    page.tsx             # Brand landing
-    business/page.tsx    # Confidential B2B demo
-    send/page.tsx        # Consumer remittance demo
-    globals.css          # Visual tokens + Tailwind v4
-  components/
-    brand.tsx            # StealthBridge mark
-    home.tsx             # Landing and GSAP routing diagram
-    workspace.tsx        # Shared simulation with distinct privacy modes
-    ui/button.tsx        # shadcn-style editable component
-  lib/utils.ts           # cn() helper
-docs/
-  DESIGN-SYSTEM.md
-  DEVELOPMENT.md
-  PRODUCT-FLOWS.md
-  OPEN-SOURCE-READINESS.md
-\`\`\`
+### How data flows
 
-## App architecture
-The frontend is one Next.js deployable with two independently scoped routes while components/design tokens mature. Neither privacy proving nor actual signing is implemented. In a future audited integration, browser wallets or secure local prover modules should own secrets/witnesses; the backend should receive authenticated public transaction intents and evidence, not raw spend keys.
+```
+Browser → same-origin /api/bridge/v1/* → Rust Backend
+                                         ├─ Stellar Testnet RPC (verified getNetwork/getLatestLedger)
+                                         └─ PostgreSQL corridor catalog (operator config, no seed data)
+Browser → Freighter extension → public wallet address + actual network (read-only)
+```
 
-The [backend](https://github.com/stealthbridge-labs/stealthbridge-backend) owns HTTP schema and workflow state. The [contracts](https://github.com/stealthbridge-labs/stealthbridge-contracts) repository owns Soroban ABI/deployment metadata. The [SDK](https://github.com/stealthbridge-labs/stealthbridge-sdk) publishes version-pinned clients. No contract addresses are hard-coded here.
+The SDK provides equivalent typed read-only methods. Integrating a published SDK package and actual confidential transaction adapter remains future work.
 
-## Design quality
-See [Design System](docs/DESIGN-SYSTEM.md) for rationale, palette, typography, motion and accessibility requirements. The responsive layout includes keyboard-visible focus styling and reduced-motion support. Run manual screen-reader, mobile and WCAG audits before claiming accessibility conformance.
+## Source layout
+- `src/app/page.tsx` and `src/components/home.tsx`: product landing with concept artwork
+- `src/app/business/page.tsx` and `src/app/send/page.tsx`: real network/corridor status screens
+- `src/components/workspace.tsx`: available corridor selection and restrictions
+- `src/components/wallet-connect.tsx`: Freighter user consent + wrong-network detection
+- `src/app/api/bridge/[...parts]/route.ts`: strict, read-only server proxy
+- `src/hooks/use-bridge.ts`: network / corridor / capability requests with errors and refresh
+- `docs/DESIGN-SYSTEM.md`, `docs/DEPLOYMENT.md`: style and deployment requirements
 
-## Research and prior art
-Tukar's detailed [product and security documentation](https://github.com/PugarHuda/tukar) is a reference for discipline, testnet evidence, and honest scoping — not a source of copied UI or cryptography. Our distinct direction is a **multi-provider platform** with B2B confidential stablecoin settlement and consumer relationship-private rails, connected by SDKs and strict state accounting. These are proposed product differentiators and not completed capabilities.
+## Status and contribution
+Frontend and SDK CI provide remote build validation. Do not claim live payment flows, partner support, security audits, or production readiness.
 
-## Contributing, funding, licensing
-We intend to grow StealthBridge openly and eventually explore Drips. No Drips registration, funding contracts, new GitHub issues, or external service setup is active. See [Open Source Readiness](docs/OPEN-SOURCE-READINESS.md). A license, contribution rules and disclosure contacts must be finalized before contributor outreach.
-
-## Safety
-No production use, financial custody or mainnet deployment. Never commit wallet seeds, ZK private witness material, API credentials or real KYC data.
+View [contribution guidance](CONTRIBUTING.md). An open-source license is still being selected before Drips onboarding. Only contribute non-sensitive research/code while the security policy is finalized.

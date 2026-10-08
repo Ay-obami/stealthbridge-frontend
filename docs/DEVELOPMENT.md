@@ -1,19 +1,30 @@
-# Frontend development
+# StealthBridge frontend development
 
-Stack target: Next.js 16 App Router, TypeScript 7, Tailwind CSS 4, shadcn-compatible components and GSAP 3.
+## Stack
+Next.js 16 (App Router), TypeScript 7, Tailwind 4, local shadcn-compatible primitives, GSAP, Freighter API 6.
 
-## Setup
-1. Node.js 22 or newer.
-2. Run `npm install` and `npm run dev` (dependencies not installed by repo commit).
-3. Copy `.env.example` to `.env.local` and configure **testnet only** endpoints.
-4. `npm run typecheck` and `npm run build` once dependencies resolve.
+## Requirements
+- Node.js 22+
+- `npm install` (repo dependency resolution)
+- `STEALTHBRIDGE_API_URL` for server-side access to a running Rust backend
+- Browser Freighter extension for wallet connectivity
 
-Root route = editorial product landing. `/business` and `/send` = interactive, locally calculated demo workspaces **without signing or network submission**. This preserves one deployable Next app while shared UI is still evolving. A split into distinct Next workspaces requires an ADR.
+```bash
+npm run typecheck
+npm run build
+npm run dev
+```
 
-## Skills to run locally after reviewing upstream source
-- `npx ui-skills` (UI design review)
+## Real data only
+The frontend never creates transaction amounts, demo corridor records, FX rates or fake payment statuses. The landing's route illustration is labeled as a concept, not a ledger visualization. Runtime displays actual data from `/api/bridge/v1/*`; backend failures are explicit.
+
+## Deployment
+See [DEPLOYMENT.md](DEPLOYMENT.md). Public backend must use HTTPS, should be behind rate limiting/TLS and must not accept fund-moving commands. Testnet wallet address must be publicly sourced from Freighter, not stored server-side.
+
+## UI skills (source reviewed, not installed automatically)
+- `npx ui-skills`
 - `npx skills add vercel-labs/agent-skills --skill web-design-guidelines`
 - `npx skills add anthropics/skills@frontend-design`
 - `npx skills add shadcn-ui/ui@shadcn`
 
-These commands are **not** executed by the GitHub commit. External CLI installations should be reviewed before running. Consult `docs/DESIGN-SYSTEM.md` and the current official shadcn docs for actual component generation.
+Review remote installers/source before running on developer machines.
