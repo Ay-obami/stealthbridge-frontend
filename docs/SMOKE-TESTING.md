@@ -18,3 +18,9 @@ It does not connect a wallet, send money, deploy contracts, verify zero-knowledg
 **Deployment prerequisites:** frontend `STEALTHBRIDGE_API_URL` must be HTTPS backend URL (localhost HTTP only); backend `STELLAR_RPC_URL` must be Testnet RPC; PostgreSQL `DATABASE_URL` optional but required for corridor discovery.
 
 Never paste your signing key or seed to a test script. Record actual contract addresses/tx hashes after independently authorized deployments.
+
+## New explorer verification
+
+Open `/explorer` and paste a public Testnet transaction hash from a transaction you actually submitted. The lookup must show only success/failure inclusion and ledger number, or an explicit retention/error state. No raw XDR or transfer history is returned. For a malformed hash, the form must reject the input before a network request.
+
+The `/business` and `/send` screens also support filtering only *operator-configured* corridor records. Validate the no-corridor case; do not seed a fictional payout location to make a screenshot appear populated.
