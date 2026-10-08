@@ -5,7 +5,6 @@ import { ArrowUpRight, ArrowRight, ShieldCheck, LockKeyhole, Globe2, Layers3, Me
 import gsap from "gsap";
 import { Brand } from "./brand";
 import { Button } from "./ui/button";
-const corridors=[{a:"Lagos",b:"Nairobi",code:"NG → KE",y:140},{a:"London",b:"Accra",code:"GB → GH",y:245},{a:"New York",b:"Manila",code:"US → PH",y:350}];
 export function Home(){
  const root=useRef<HTMLDivElement>(null);
  const [mobileMenu,setMobileMenu]=useState(false);
@@ -27,10 +26,10 @@ export function Home(){
  <div className="hero-reveal hero-buttons"><Button size="lg" asChild><Link href="/business">Explore Business <ArrowUpRight size={17}/></Link></Button><Button size="lg" variant="outline" asChild><Link href="/send">Experience Send <ArrowRight size={17}/></Link></Button></div>
  <div className="hero-reveal hero-note"><ShieldCheck size={16}/><span>Testnet research preview. No real-value transfers.</span></div>
  </div>
- <div className="hero-art" role="group" aria-label="Illustrative confidential payment corridor visualization">
+ <div className="hero-art" role="group" aria-label="Conceptual confidential payment rail diagram, not actual transaction data">
  <div className="ambient-halo"/>
  <div className="routing-board">
- <div className="board-top"><div><span className="board-eyebrow">Corridor intelligence</span><strong>Private settlement network</strong></div><span className="board-live"><span/> Preview</span></div>
+ <div className="board-top"><div><span className="board-eyebrow">Corridor intelligence</span><strong>Private settlement network</strong></div><span className="board-live"><span/> Concept</span></div>
  <div className="board-diagram">
  <div className="route-axis"><span>Origin</span><span>Privacy layer</span><span>Destination</span></div>
  <svg className="routing-svg" viewBox="0 0 580 370" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -43,12 +42,12 @@ export function Home(){
  {[100,205,310].map((y)=><g key={y}><circle cx="85" cy={y} r="6" fill="#4de5ca"/><circle cx="85" cy={y} r="13" stroke="#4de5ca" strokeOpacity=".22" fill="none"/><circle cx="495" cy={y} r="6" fill="#80b9ff"/><circle cx="495" cy={y} r="13" stroke="#80b9ff" strokeOpacity=".22" fill="none"/></g>)}
  <circle cx="290" cy="185" r="37" fill="#062a31" stroke="#58edcf" strokeOpacity=".6"/><path d="M276 184l10 9 18-21" stroke="#67f1d8" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
  </svg>
- <div className="route-labels"><div>{corridors.map(c=><div key={c.code}><span>{c.a}</span><small>{c.code}</small></div>)}</div><div>{corridors.map(c=><div key={c.code}><span>{c.b}</span><small>Destination</small></div>)}</div></div>
+ <div className="route-labels"><div><div><span>Funding side</span><small>Concept</small></div></div><div><div><span>Receiving side</span><small>Concept</small></div></div></div>
  <div className="privacy-label"><LockKeyhole size={13}/> Protected route</div>
  </div>
  <div className="board-footer"><span><span className="tiny-orb"/> Confidentiality is designed in</span><span>Soroban · ZK</span></div>
  </div>
- <div className="floating-receipt"><div className="floating-icon"><LockKeyhole size={17}/></div><div><span>Settlement amount</span><strong>••••••••</strong></div><span className="receipt-tag">Protected</span></div>
+ <div className="floating-receipt"><div className="floating-icon"><LockKeyhole size={17}/></div><div><span>Illustrative private amount</span><strong>••••••••</strong></div><span className="receipt-tag">Concept</span></div>
  </div>
  </section>
  <section id="infrastructure" className="trust-strip"><div className="container-wide trust-inner"><span>Built for the privacy spectrum</span><strong>Confidential Tokens</strong><strong>Stellar Private Payments</strong><strong>Soroban / Rust</strong><strong>Stablecoin corridors</strong></div></section>
