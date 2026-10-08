@@ -92,3 +92,7 @@ View [contribution guidance](CONTRIBUTING.md). Licensing decisions are documente
 ## Refined interface controls
 
 The shared shadcn-compatible `Button` supports `primary`, `secondary`, `outline`, `glass`, `ghost` and `danger` appearances, with improved keyboard focus, disabled semantics, responsive tap targets and safe `asChild` links. Marketing pages also have a minimal scroll-reading indicator and an accessible Back to Top action, respecting reduced-motion preferences. These controls do not initiate or simulate payments.
+
+## Detailed developer guide
+
+[Read the implementation and integration guide](docs/PRODUCT-SITE-GUIDE.md) for current API boundaries, usage, verification and security requirements.
