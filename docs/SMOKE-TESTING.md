@@ -1,26 +1,27 @@
-# Testing the deployed StealthBridge frontend and backend
+# Deployment verification
 
-After you configure and deploy both services, run:
+## Public landing (no backend required)
+
+Build the current Next.js application and run the environment-independent local gate:
 
 ```bash
 npm install
-npm run smoke -- https://your-actual-frontend-url.example
+npm run build
+npm run test:landing
 ```
 
-The smoke script checks:
-1. Public landing, Business and Send routes return HTML.
-2. Backend proxy responds with **actual** Stellar Testnet network passphrase, ledger head and 64-hex hash.
-3. Corridor catalog response is either a real array from PostgreSQL (possibly empty) or an explicit 503.
-4. Capability flags are returned rather than fake transaction status.
+This starts a local Next server in landing mode and checks the public homepage, logo asset, deliberately disabled future product routes, and disabled API proxy.
 
-It does not connect a wallet, send money, deploy contracts, verify zero-knowledge proofs or claim successful fiat payouts. Browser-level Freighter and UI testing remains necessary.
+For your first Vercel deployment, **no backend URL or environment variables are required**. Visit the published HTTPS link in a desktop and mobile browser. Confirm the homepage, mobile navigation, interactive Business/Send product switch and GitHub links.
 
-**Deployment prerequisites:** frontend `STEALTHBRIDGE_API_URL` must be HTTPS backend URL (localhost HTTP only); backend `STELLAR_RPC_URL` must be Testnet RPC; PostgreSQL `DATABASE_URL` optional but required for corridor discovery.
+## Preview mode (requires a real backend)
 
-Never paste your signing key or seed to a test script. Record actual contract addresses/tx hashes after independently authorized deployments.
+Only after configuring `STEALTHBRIDGE_SITE_MODE=preview` and `STEALTHBRIDGE_API_URL=https://your-backend`, run:
 
-## New explorer verification
+```bash
+npm run smoke -- https://your-deployed-frontend.example
+```
 
-Open `/explorer` and paste a public Testnet transaction hash from a transaction you actually submitted. The lookup must show only success/failure inclusion and ledger number, or an explicit retention/error state. No raw XDR or transfer history is returned. For a malformed hash, the form must reject the input before a network request.
+This existing live smoke script checks landing, Business and Send pages, an actual Stellar Testnet RPC ledger result, real configured corridor responses (or explicit 503), and capability flags. You may also visit `/explorer` and look up a real Testnet transaction hash. It does **not** prove fiat payout, cryptographic privacy, live FX or regulated service readiness.
 
-The `/business` and `/send` screens also support filtering only *operator-configured* corridor records. Validate the no-corridor case; do not seed a fictional payout location to make a screenshot appear populated.
+Never paste wallet seeds or secret keys into Vercel build settings.
