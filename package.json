@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "test:landing": "node scripts/verify-landing.mjs"
   },
   "dependencies": {
     "next": "^16.4.0",

@@ -2,6 +2,7 @@ import {NextRequest,NextResponse} from "next/server";
 export const dynamic="force-dynamic";
 const allowed = new Set(["health","v1/network","v1/capabilities","v1/corridors"]);
 export async function GET(_request:NextRequest,context:{params:Promise<{parts:string[]}>}){
+ if(process.env.STEALTHBRIDGE_SITE_MODE!=="preview") return NextResponse.json({code:"PREVIEW_DISABLED"},{status:404});
  const {parts}=await context.params;
  const path=parts.join("/");
  if(!allowed.has(path) && !/^v1\/transactions\/[a-f0-9]{64}$/i.test(path)) return NextResponse.json({code:"NOT_FOUND"},{status:404});

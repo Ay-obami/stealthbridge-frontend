@@ -4,7 +4,8 @@ export const metadata: Metadata = {
   icons: { icon: "/brand/stealthbridge-symbol.svg" },
   title: "StealthBridge | Confidential payments. Without borders.",
   description: "A testnet-first confidential settlement and remittance infrastructure experiment built on Stellar.",
-  robots: { index: false, follow: false }
+  robots: { index: true, follow: true },
+  openGraph: { title: "StealthBridge — Confidential payments. Without borders.", description: "Exploring privacy-conscious cross-border payments on Stellar.", type: "website" }
 };
 export const viewport: Viewport = { themeColor: "#031419" };
 export default function RootLayout({ children }: Readonly<{children:React.ReactNode}>) {
