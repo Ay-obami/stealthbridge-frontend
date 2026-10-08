@@ -26,12 +26,12 @@ export class ApiUnavailable extends Error {
   constructor(public readonly status: number, public readonly endpoint: string) {
     super(status === 503
       ? "The data service is not configured or available."
-      : \`The data service returned HTTP \${status}.\`);
+      : `The data service returned HTTP ${status}.`);
     this.name = "ApiUnavailable";
   }
 }
 export async function readBridge<T>(endpoint: "network" | "corridors" | "capabilities", signal?: AbortSignal): Promise<T> {
-  const res = await fetch(\`/api/bridge/v1/\${endpoint}\`, {cache:"no-store",signal});
+  const res = await fetch(`/api/bridge/v1/${endpoint}`, {cache:"no-store",signal});
   if (!res.ok) throw new ApiUnavailable(res.status, endpoint);
   return res.json() as Promise<T>;
 }
