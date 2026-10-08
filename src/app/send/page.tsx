@@ -1,9 +1,7 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { Workspace } from "@/components/workspace";
-export const dynamic="force-dynamic";
-export const metadata:Metadata={robots:{index:false,follow:false},title:"Send | StealthBridge"};
-export default function Page(){
- if(process.env.STEALTHBRIDGE_SITE_MODE!=="preview")notFound();
- return <Workspace mode="send"/>;
-}
+import type {Metadata} from "next";
+import {ProductStory} from "@/components/product-story";
+export const metadata:Metadata={
+ title:"StealthBridge Send | A more thoughtful way to send",
+ description:"Meet StealthBridge Send, a future remittance experience centered on privacy, clarity and people."
+};
+export default function Page(){return <ProductStory product="send"/>;}
