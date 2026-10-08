@@ -1,21 +1,34 @@
-# StealthBridge Design Direction
+# StealthBridge Marketing Design System
 
-Visual thesis: **a confidential route through visible infrastructure.** Unlike generic crypto dashboards, the dominant visual language is the route map with an intentionally opaque settlement amount and a calm, institutional palette. Use the already-approved StealthBridge gradient mark as the basis for identity.
+**Thesis:** Move value. Not exposure. Express a world of connected opportunities through subtle, directional light, protected routes, translucent architectural objects and substantial editorial typography. Product sites must never route a public visitor to a codebase, engineering issues or source roadmaps.
 
-## Tokens
-- Deepest ink: #031419
-- Surface: #092129
-- Ocean layer: #0c3943
-- Verified mint: #80f6db
-- Information blue: #80b9ff
-- Body text: #eaf9f6
-- Secondary text: #99b7b8
+## Brand
 
-## Type
-Contemporary sans (Arial system fallback for reproducible demo), broad headline leading and narrow copy columns. No generic dashboard KPI grid in the landing hero.
+Keep the approved StealthBridge cyan/teal ribbon icon in `public/brand/`. Navy `#031419`, surface `#092129`, mint `#80F6DB`, sky `#80B9FF`, primary type `#EAF9F6` and secondary text `#99B7B8`. Large heads, small uppercase editorial labels, narrow readable prose, generous white space and transparent limitations.
 
-## Motion
-GSAP entrance choreography for the first hero, SVG corridor stroke draw. Reduced-motion media query disables non-essential animations. Never animate transaction statuses or suggest a completed settlement without actual chain/payout verification.
+## Public surfaces
 
-## Experience quality gates
-Contrast and legibility; keyboard and screen-reader navigation; clear demo/testnet disclosure; genuine loading/empty/error states before network wiring; avoid fake live quotes or invented volume stats; no user secrets sent to server; desktop, tablet and mobile responsive.
+`/`: positioning + living schematic, selectable product cards, responsible privacy principles.
+
+`/business`: institutional settlement, confidentiality, organizational oversight, reconciliation.
+
+`/send`: consumer-first remittances, responsible privacy choices and delivery clarity.
+
+`/platform`: modular platform philosophy, privacy model differences, blockchain/off-chain distinction.
+
+All pages are information products at this stage. No fabricated corridor, provider name, FX quote, transaction hash, fund success state, or performance statistics.
+
+## Motion language
+
+- **GSAP entrance**: header + headline reveal through motion and blur, settling into a stable readable position.
+- **GSAP MotionPathPlugin**: soft packets travel across the conceptual settlement board following its curved routes. They represent *connection*, not transfer completion.
+- **GSAP ScrollTrigger**: perspective chapters and value cards rise into place when scrolled into view.
+- **GSAP ambient**: orbital glow, barely floating board, softened breathing highlights.
+- **Interactive**: Business/Send selector crossfades and subtle hover/tactile responses.
+- **CSS**: restrained moving aurora headline, rotating arcs and light sweep on primary CTA.
+
+Respect `prefers-reduced-motion: reduce`: disable looping and entrance animation in JavaScript and CSS, never use visibility:hidden as a static starting state and leave all content readable. No motion should claim on-chain finality or actual fiat payout.
+
+## Accessibility & responsive quality
+
+Keyboard-visible focus, aria-expanded mobile navigation, semantic anchors for product exploration, meaningful screen reader labels, legible dark/light contrast, no hover-only content, flexible product cards on mobile, high-contrast error/availability text. Audit with real browser screenshots and screen reader; do not infer conformance from code alone.

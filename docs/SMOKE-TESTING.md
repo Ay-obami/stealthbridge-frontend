@@ -1,27 +1,20 @@
-# Deployment verification
+# Public site and staging verification
 
-## Public landing (no backend required)
-
-Build the current Next.js application and run the environment-independent local gate:
+## Marketing release
 
 ```bash
 npm install
+npm run typecheck
 npm run build
 npm run test:landing
 ```
 
-This starts a local Next server in landing mode and checks the public homepage, logo asset, deliberately disabled future product routes, and disabled API proxy.
+The script checks `/`, `/business`, `/send`, and `/platform` (all return 200); ensures no public page HTML contains direct GitHub/source roadmap links; checks the logo; and confirms technical routes and API proxy return 404 by default.
 
-For your first Vercel deployment, **no backend URL or environment variables are required**. Visit the published HTTPS link in a desktop and mobile browser. Confirm the homepage, mobile navigation, interactive Business/Send product switch and GitHub links.
+Manually view **https://stealthbridge.vercel.app/** on real desktop and mobile browsers to confirm the scroll-triggered animation, product switch, modal-free navigation and reduced-motion mode. CI does not execute a visual browser test, so a screenshot/device review is still needed.
 
-## Preview mode (requires a real backend)
+## Engineering staging
 
-Only after configuring `STEALTHBRIDGE_SITE_MODE=preview` and `STEALTHBRIDGE_API_URL=https://your-backend`, run:
+To run real backend smoke checks without exposing internal workspaces on the marketing site, deploy a staging environment with `STEALTHBRIDGE_SITE_MODE=preview` and a real, HTTPS `STEALTHBRIDGE_API_URL`. The existing `npm run smoke -- https://staging-url` checks RPC/network connectivity; product marketing pages remain independent.
 
-```bash
-npm run smoke -- https://your-deployed-frontend.example
-```
-
-This existing live smoke script checks landing, Business and Send pages, an actual Stellar Testnet RPC ledger result, real configured corridor responses (or explicit 503), and capability flags. You may also visit `/explorer` and look up a real Testnet transaction hash. It does **not** prove fiat payout, cryptographic privacy, live FX or regulated service readiness.
-
-Never paste wallet seeds or secret keys into Vercel build settings.
+No public site test performs wallet signing, fund movements, proof generation or fiat payouts.

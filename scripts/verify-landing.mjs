@@ -1,58 +1,48 @@
 #!/usr/bin/env node
-// Self-contained deployment gate for the public landing. No external accounts,
-// credentials, database, RPC network access or staged payment data required.
+// Self-contained public marketing verification. No backend, wallet or real funds.
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { setTimeout as delay } from "node:timers/promises";
-
-const PORT = 3198;
-const URL = "http://127.0.0.1:" + PORT;
-const server = spawn(
-  process.execPath,
-  ["./node_modules/next/dist/bin/next", "start", "-p", String(PORT), "-H", "127.0.0.1"],
-  { env: { ...process.env, STEALTHBRIDGE_SITE_MODE: "landing", STEALTHBRIDGE_API_URL: "" },
-    stdio: ["ignore", "pipe", "pipe"] }
-);
-let log = "";
-for (const stream of [server.stdout,server.stderr]) {
-  stream.on("data", chunk => { log += chunk.toString().slice(-3000); });
+import {spawn} from "node:child_process";
+import {setTimeout as delay} from "node:timers/promises";
+const PORT=3198,BASE="http://127.0.0.1:"+PORT;
+const server=spawn(process.execPath,
+ ["./node_modules/next/dist/bin/next","start","-p",String(PORT),"-H","127.0.0.1"],
+ {env:{...process.env,STEALTHBRIDGE_SITE_MODE:"landing",STEALTHBRIDGE_API_URL:""},stdio:["ignore","pipe","pipe"]});
+let logs="";
+for(const stream of [server.stdout,server.stderr])stream.on("data",chunk=>{logs+=chunk.toString().slice(-2500);});
+async function expectPage(path,words){
+ const response=await fetch(BASE+path,{redirect:"manual",signal:AbortSignal.timeout(10000)});
+ assert.equal(response.status,200,path+" must be publicly available");
+ const html=await response.text();
+ for(const phrase of words)assert.ok(html.toLowerCase().includes(phrase.toLowerCase()),path+" missing "+phrase);
+ assert.doesNotMatch(html,/<a\b[^>]*href="https:\/\/github\.com\//i,path+" links users to the codebase");
+ assert.doesNotMatch(html,/href="[^"]*ROADMAP\.md"/i,path+" sends visitors to developer roadmap");
+ assert.doesNotMatch(html,/href="\/preview\//i,path+" links to internal previews");
+ console.log("PASS product page "+path+" (200; product content; no codebase redirects)");
 }
-async function check(path, expected, test) {
-  const response = await fetch(URL+path,{signal:AbortSignal.timeout(10000),redirect:"manual"});
-  assert.equal(response.status,expected,path+" unexpected HTTP status");
-  if(test) await test(response);
-  console.log("PASS landing: "+path+" returned "+expected);
-}
-try {
-  let ready = false;
-  for(let attempt=0;attempt<70;attempt++){
-    if(server.exitCode !== null)throw new Error("Next.js server exited before checks");
-    try {
-      const response=await fetch(URL+"/",{signal:AbortSignal.timeout(800)});
-      if(response.ok){ready=true;break;}
-    }catch{}
-    await delay(300);
-  }
-  assert.ok(ready,"Next.js server did not become ready\n"+log);
-  await check("/",200,async response=>{
-    const html=await response.text();
-    assert.match(html,/StealthBridge/i);
-    assert.match(html,/Move value/);
-    assert.match(html,/Confidential payments/i);
-    assert.doesNotMatch(html,/href="\/business"/,"public homepage must not link to disabled Business route");
-    assert.doesNotMatch(html,/href="\/send"/,"public homepage must not link to disabled Send route");
-  });
-  await check("/brand/stealthbridge-symbol.svg",200);
-  for(const path of ["/business","/send","/explorer","/api/bridge/v1/network"]){
-    await check(path,404);
-  }
-  console.log("Landing-ready: no external services or testnet account required.");
-} catch(e) {
-  console.error("Landing verification failed:",e);
-  console.error(log.slice(-6000));
-  process.exitCode=1;
-} finally {
-  server.kill("SIGTERM");
+try{
+ let ready=false;
+ for(let attempt=0;attempt<70;attempt++){
+  if(server.exitCode!==null)throw new Error("Next.js exited before readiness");
+  try{const res=await fetch(BASE+"/",{signal:AbortSignal.timeout(800)});if(res.ok){ready=true;break;}}catch{}
   await delay(300);
-  if(server.exitCode===null)server.kill("SIGKILL");
+ }
+ assert.ok(ready,"Server failed to start: "+logs);
+ await expectPage("/",["StealthBridge","Move value","Not exposure","/business","/send","/platform"]);
+ await expectPage("/business",["StealthBridge Business","Confidentiality","In development"]);
+ await expectPage("/send",["StealthBridge Send","Close to home","In development"]);
+ await expectPage("/platform",["StealthBridge","More than","In development"]);
+ const logo=await fetch(BASE+"/brand/stealthbridge-symbol.svg");
+ assert.equal(logo.status,200,"Logo asset must exist");
+ for(const path of ["/explorer","/preview/business","/preview/send","/api/bridge/v1/network"]){
+  const response=await fetch(BASE+path,{redirect:"manual"});
+  assert.equal(response.status,404,path+" must remain private in public marketing mode");
+  console.log("PASS private preview protection "+path);
+ }
+ console.log("PASS marketing site ready; payment actions remain unavailable");
+}catch(e){
+ console.error("Marketing verification FAILED",e);
+ console.error(logs.slice(-5000));
+ process.exitCode=1;
+}finally{
+ server.kill("SIGTERM");await delay(300);if(server.exitCode===null)server.kill("SIGKILL");
 }

@@ -1,63 +1,47 @@
-# Frontend deployment — Vercel quick start
+# StealthBridge public website — deployment
 
-The **public landing page is deployable as a standalone Next.js 16 project**, independently of the Rust backend, PostgreSQL, Stellar RPC, contracts, provider credentials or signing keys.
+The standalone Next.js website at **https://stealthbridge.vercel.app/** introduces StealthBridge without requiring a live backend, signing keys, RPC connection, payout partners or fiat data. The GitHub repository `stealthbridge-labs/stealthbridge-frontend` is already connected to a Vercel project. When Vercel's GitHub integration is enabled, new commits to `main` trigger deployments.
 
-## Deploy the landing now
+## Public pages
 
-1. Visit [Vercel New Project](https://vercel.com/new), connect GitHub if needed.
-2. Import **`stealthbridge-labs/stealthbridge-frontend`** (not the organization `.github` or contracts repo). Grant Vercel's GitHub app repository access only if prompted.
-3. Set the **Framework Preset** to `Next.js`, **Root Directory** to `./` (repository root), and **Node.js** to version **22.x** in project settings.
-4. **Keep default install/build/output commands**. `vercel.json` already identifies Next.js. The `package.json` contains `next build`.
-5. **Do not add any environment variables for the public landing.** The default `landing` mode displays the homepage and hides incomplete `/business`, `/send`, `/explorer` workspaces and the read-only API proxy.
-6. Click **Deploy**. Open your `https://<project>.vercel.app` URL, confirm the ribbon logo and interactive sections, and check mobile layout.
+| Route | Experience |
+| --- | --- |
+| `/` | Motion-rich product landing with private-rail concept visualization and Business/Send switch |
+| `/business` | Institutional settlement vision, privacy, audit and reconciliation story |
+| `/send` | Human-focused private remittance vision and clear privacy limitations |
+| `/platform` | Shared technical philosophy explained in product language |
 
-**No database, backend URL, wallet seed, RPC credentials, hosting secrets, or stablecoin configuration is required to deploy this public landing.**
+**No public CTA leads to GitHub, source code or engineering roadmaps.** Navigation and buttons remain on StealthBridge's product pages. The content clearly says the product is in development; no real payment, rate or provider claim is fabricated.
 
-Vercel normally configures subsequent deployments from GitHub commits. You can later attach a custom domain in project settings.
+## Deploy / verify
 
-## Site modes
+1. Push to the connected repository's `main` branch (or use the Vercel production deployment dashboard).
+2. In Vercel, use Next.js, repository root `./`, Node.js 22.x and standard build command `npm run build`.
+3. No environment variables are required for public marketing mode. Leave `STEALTHBRIDGE_SITE_MODE` unset or set it to `landing`.
+4. Once Vercel finishes, inspect **https://stealthbridge.vercel.app/** and `/business`, `/send`, `/platform` on mobile and desktop.
+5. Test the hero load-in, continuous travelling route packets, floating visualization, scroll-triggered sections, product selector animation and user `prefers-reduced-motion` behavior.
 
-| Environment | Behavior | Backend required |
-| --- | --- | --- |
-| No `STEALTHBRIDGE_SITE_MODE` (default) | Public landing-only, future product routes return branded 404 | No |
-| `STEALTHBRIDGE_SITE_MODE=landing` | Same as default, explicit | No |
-| `STEALTHBRIDGE_SITE_MODE=preview` | Enables Work-in-progress Business, Send, Explorer and read-only API proxy | Yes, for live network features |
+GitHub Actions runs `npm run typecheck`, `npm run build`, and `npm run test:landing`. The last command starts the built application without a backend, asserts all four public pages return 200 and contain product copy, checks no HTML links to GitHub/source roadmaps, and confirms technical preview/API routes remain gated.
 
-For **preview mode only**, set two *server-side* environment variables in Vercel Project Settings → Environment Variables:
+## Technical previews
+
+The existing non-money-moving engineering workspaces are separated from product marketing:
+
+- `/preview/business`
+- `/preview/send`
+- `/explorer`
+
+These routes are unavailable by default. Only a dedicated technical staging deployment should set:
 
 ```env
 STEALTHBRIDGE_SITE_MODE=preview
-STEALTHBRIDGE_API_URL=https://your-actual-backend.example
+STEALTHBRIDGE_API_URL=https://your-real-backend.example
 ```
 
-Redeploy after updating variables. Do not use `NEXT_PUBLIC_` for backend URL—only the Next.js server-side allowlisted proxy can contact it. Remote backend URL must be HTTPS. `http://localhost:8080` works in local development only.
+The API proxy is guarded by the same mode. Preview mode does not activate confidential payments, real fiat payouts or production money movement.
 
-Enabling preview does **not** enable value transfers, ZK proofs, quotes, compliance checks or fiat payouts. Those remain separately verified engineering milestones.
+## Design & animation
 
-## Verify the deployed landing
+GSAP / ScrollTrigger / MotionPathPlugin provide intro choreography, curved travelling signals and scroll reveals. CSS adds a subtle headline tint, orbital movement, glow and interactive hover treatments. All motion is decorative: it does not imply actual transaction completion. A `prefers-reduced-motion` check disables nonessential motion and keeps all content visible. See `docs/DESIGN-SYSTEM.md`.
 
-Local no-service gate:
-
-```bash
-npm install
-npm run typecheck
-npm run build
-npm run test:landing
-```
-
-In the deployed site, verify:
-- `/` renders brand, hero, product switch, information sections and actionable links.
-- `/brand/stealthbridge-symbol.svg` renders the approved compact logo.
-- `/business`, `/send`, `/explorer` return a friendly 404 until preview is explicitly enabled.
-- `/api/bridge/v1/network` returns 404 in landing mode.
-- No real funds, fabricated rates, live payout claims, or wallet credentials are solicited.
-
-Once preview is deployed with a real backend, use [the live integration smoke test](SMOKE-TESTING.md).
-
-## Deployment troubleshooting
-
-- **Repository missing in Vercel:** grant its GitHub integration access to the `stealthbridge-labs/stealthbridge-frontend` repository.
-- **Build failure:** use Node.js 22.x and confirm the latest [frontend GitHub Actions](https://github.com/stealthbridge-labs/stealthbridge-frontend/actions) run. Avoid changing build commands unless there is evidence of a failure.
-- **No backend data:** expected in landing mode. It does not block the homepage.
-- **Business or Send 404:** deliberate until `STEALTHBRIDGE_SITE_MODE=preview`. Do not enable preview merely to remove the 404 for marketing.
-- **Logo or mobile issues:** hard-refresh after deployment, check network requests for `/brand/`, and attach screenshots to the relevant frontend issue.
+Vercel account access may be required to inspect build logs or protected deployments; a successful GitHub build alone does not prove an updated production URL is visually correct.
