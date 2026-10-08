@@ -32,3 +32,9 @@ Respect `prefers-reduced-motion: reduce`: disable looping and entrance animation
 ## Accessibility & responsive quality
 
 Keyboard-visible focus, aria-expanded mobile navigation, semantic anchors for product exploration, meaningful screen reader labels, legible dark/light contrast, no hover-only content, flexible product cards on mobile, high-contrast error/availability text. Audit with real browser screenshots and screen reader; do not infer conformance from code alone.
+
+## Interaction primitives and navigation
+
+Use `Button` (`src/components/ui/button.tsx`) for consistently styled action links and button controls. The primary mint button identifies one meaningful CTA per section; outline/secondary styles show alternatives; glass is reserved for surfaces over artwork; danger should be reserved for truly destructive, future authorized actions. Buttons have visible focus rings, accessible 44–48px targets on mobile, deterministic disabled states and reduced-motion fallbacks. `asChild` must wrap one real link, not a nested button.
+
+`SiteEnhancements` adds a passive scroll-progress indicator and a visible, keyboard-operable Back to Top button after meaningful scroll depth. These are navigation aids only, not financial-state indicators.

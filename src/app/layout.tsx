@@ -1,6 +1,7 @@
 import type {Metadata,Viewport} from "next";
 import "./globals.css";
 import { SITE_ORIGIN } from "./site-metadata";
+import {SiteEnhancements} from "@/components/site-enhancements";
 export const metadata:Metadata={
  metadataBase:new URL(SITE_ORIGIN),
  alternates:{canonical:"/"},
@@ -18,5 +19,5 @@ export const metadata:Metadata={
 };
 export const viewport:Viewport={themeColor:"#031419"};
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){
- return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to main content</a>{children}</body></html>;
+ return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to main content</a>{children}<SiteEnhancements/></body></html>;
 }

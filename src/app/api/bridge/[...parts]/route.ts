@@ -5,7 +5,7 @@ export async function GET(_request:NextRequest,context:{params:Promise<{parts:st
  if(process.env.STEALTHBRIDGE_SITE_MODE!=="preview") return NextResponse.json({code:"PREVIEW_DISABLED"},{status:404});
  const {parts}=await context.params;
  const path=parts.join("/");
- if(!allowed.has(path) && !/^v1\/transactions\/[a-f0-9]{64}$/i.test(path)) return NextResponse.json({code:"NOT_FOUND"},{status:404});
+ if(!allowed.has(path) && !/^v1\/transactions\/[a-f0-9]{64}$/i.test(path) && !/^v1\/corridors\/[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i.test(path)) return NextResponse.json({code:"NOT_FOUND"},{status:404});
  const base=process.env.STEALTHBRIDGE_API_URL;
  if(!base) return NextResponse.json({code:"API_UNCONFIGURED",message:"Configure STEALTHBRIDGE_API_URL on the frontend server."},{status:503});
  try{
