@@ -185,3 +185,18 @@
 .routing-board,.floating-receipt,.story-halo,.story-shield{transform:none!important}
 }
 
+
+/* Accessible, consistent product CTAs and user-controlled page navigation */
+[data-slot="button"]{text-decoration:none;justify-content:center;position:relative}
+[data-slot="button"]:focus-visible{outline:2px solid #8cfce6;outline-offset:4px}
+[data-slot="button"][aria-disabled="true"]{pointer-events:none;opacity:.45}
+[data-slot="button"] svg{flex-shrink:0;transition:transform .25s ease}
+[data-slot="button"]:hover:not(:disabled) svg{transform:translate(2px,-1px)}
+.reading-track{position:fixed;inset:0 0 auto;height:3px;z-index:1000;pointer-events:none;background:transparent}
+.reading-progress{height:100%;background:linear-gradient(90deg,#2ba2db,#8df8dd);box-shadow:0 0 12px #76e8d66b;transition:width .12s linear}
+.back-to-top{position:fixed;z-index:50;right:22px;bottom:24px;height:48px;width:48px;border-radius:50%;background:#8cf8dd;color:#072a2d;border:1px solid #bcfff0;box-shadow:0 8px 28px #0006;display:grid;place-items:center;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s ease,transform .25s ease;cursor:pointer}
+.back-to-top.is-visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.back-to-top:hover{transform:translateY(-3px)}
+.back-to-top:focus-visible{outline:3px solid #c4fff1;outline-offset:4px}
+@media(max-width:600px){.back-to-top{right:16px;bottom:16px;height:44px;width:44px}.story-primary,.hero-buttons [data-slot="button"]{min-height:48px}}
+@media(prefers-reduced-motion:reduce){.reading-progress,.back-to-top,[data-slot="button"],[data-slot="button"] svg{transition:none!important;animation:none!important}.back-to-top:hover{transform:none}}

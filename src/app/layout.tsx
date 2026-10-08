@@ -1,5 +1,6 @@
 import type {Metadata,Viewport} from "next";
 import "./globals.css";
+import {SiteEnhancements} from "@/components/site-enhancements";
 export const metadata:Metadata={
  icons:{icon:"/brand/stealthbridge-symbol.svg"},
  title:{default:"StealthBridge | Confidential payments. Without borders.",template:"%s | StealthBridge"},
@@ -13,5 +14,5 @@ export const metadata:Metadata={
 };
 export const viewport:Viewport={themeColor:"#031419"};
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){
- return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to main content</a>{children}</body></html>;
+ return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to main content</a>{children}<SiteEnhancements/></body></html>;
 }

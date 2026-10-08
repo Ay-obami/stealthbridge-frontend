@@ -88,3 +88,7 @@ The SDK provides equivalent typed read-only methods. Integrating a published SDK
 Frontend and SDK CI provide remote build validation. Do not claim live payment flows, partner support, security audits, or production readiness.
 
 View [contribution guidance](CONTRIBUTING.md). Licensing decisions are documented through the project's open development governance. Only contribute non-sensitive research/code while the security policy is finalized.
+
+## Refined interface controls
+
+The shared shadcn-compatible `Button` supports `primary`, `secondary`, `outline`, `glass`, `ghost` and `danger` appearances, with improved keyboard focus, disabled semantics, responsive tap targets and safe `asChild` links. Marketing pages also have a minimal scroll-reading indicator and an accessible Back to Top action, respecting reduced-motion preferences. These controls do not initiate or simulate payments.
