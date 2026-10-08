@@ -44,6 +44,23 @@ npm run build
 npm run dev
 ```
 
+## Browser tests
+
+The Playwright suite builds on the same backend-free landing mode as the existing HTTP smoke check. It starts an isolated production server on `127.0.0.1:3199` and runs Chromium at desktop, narrow-mobile and reduced-motion settings.
+
+Install the pinned Chromium build once, then build and run the suite:
+
+```bash
+npm install
+npx playwright install chromium
+STEALTHBRIDGE_SITE_MODE=landing npm run build
+npm run test:browser
+```
+
+Use `npx playwright test --ui` for interactive debugging, or `npx playwright show-report` after a run. Failures retain a trace and full-page screenshot under `test-results/`; CI also uploads `test-results/` and `playwright-report/` as the `playwright-artifacts` artifact. No backend, wallet extension, Stellar key or payment credential is required.
+
+The lightweight `npm run test:landing` HTTP check remains available and runs before the browser suite in CI.
+
 For the landing, leave the environment unset. For private technical previews, set `STEALTHBRIDGE_SITE_MODE=preview` and `STEALTHBRIDGE_API_URL=http://localhost:8080` locally, or an HTTPS backend URL on Vercel. The server-side API proxy is read-only and allowlisted. The landing mode serves public product storytelling at `/business`, `/send` and `/platform`. It returns 404 for internal `/preview/business`, `/preview/send`, `/explorer` and the API proxy.
 
 ### How data flows
