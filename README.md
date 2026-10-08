@@ -1,5 +1,7 @@
 # StealthBridge Frontend
 
+**Engineering roadmap:** [View the repository-specific plan](ROADMAP.md).
+
 <div align="center"><img src="public/brand/stealthbridge-logo.svg" alt="StealthBridge — Confidential payments. Without borders." width="540" /></div>
 
 **Confidential payments. Without borders.** Next.js 16 / TypeScript 7 / Tailwind CSS 4 / Freighter / GSAP.
