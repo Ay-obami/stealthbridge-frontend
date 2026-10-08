@@ -6,5 +6,7 @@ node_modules/
 *.tsbuildinfo
 coverage/
 dist/
+playwright-report/
+test-results/
 
 .vercel/
