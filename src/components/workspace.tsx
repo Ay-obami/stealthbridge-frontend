@@ -13,11 +13,12 @@ export function Workspace({mode}:{mode:"business"|"send"}){
  const rail:PrivacyRail=business?"confidential-token":"private-payments";
  const {network,corridors,capabilities,refresh}=useBridge();
  const [selected,setSelected]=useState("");
- const available=useMemo(()=>corridors.data?.filter(c=>c.privacy_rail===rail)??[],[corridors.data,rail]);
+ const [filter,setFilter]=useState("");
+ const available=useMemo(()=>corridors.data?.filter(c=>c.privacy_rail===rail && [c.origin_country,c.destination_country,c.asset_code,c.asset_issuer??""].some(v=>v.toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())))??[],[corridors.data,rail,filter]);
  const corridor=available.find(c=>c.id===selected)??null;
  const formatLedgerTime=(raw:string)=>{const n=Number(raw);if(!Number.isFinite(n))return "Unknown";return new Intl.DateTimeFormat(undefined,{dateStyle:"medium",timeStyle:"medium",timeZone:"UTC"}).format(new Date(n*1000))+" UTC";};
  return <div className="workspace-page">
- <header className="workspace-header"><Brand/><span className="network-chip"><i/> Stellar Testnet</span><Link href="/" className="back-link"><ArrowLeft size={16} aria-hidden/> Home</Link></header>
+ <header className="workspace-header"><Brand/><span className="network-chip"><i/> Stellar Testnet</span><Link href="/explorer" className="back-link">Network explorer <ArrowRight size={15}/></Link><Link href="/" className="back-link"><ArrowLeft size={16} aria-hidden/> Home</Link></header>
  <main id="main-content" className="workspace-main">
   <div className="workspace-intro">
    <span className="section-index">{business?"StealthBridge / Business":"StealthBridge / Send"}</span>
@@ -32,7 +33,7 @@ export function Workspace({mode}:{mode:"business"|"send"}){
      {network.loading?<p role="status">Checking network…</p>:network.error?<p className="state-error" role="alert"><AlertTriangle size={17} aria-hidden/> {network.error}</p>:network.data?<div className="live-ledger"><strong>Ledger {network.data.ledger_sequence.toLocaleString()}</strong><span>Protocol {network.data.protocol_version} · Closed {formatLedgerTime(network.data.ledger_closed_at_unix)}</span><a href="https://stellar.expert/explorer/testnet" target="_blank" rel="noreferrer">View Testnet explorer <ExternalLink size={14} aria-hidden/></a></div>:null}
     </div>
     <label className="field" htmlFor="corridor-select">Available {business?"business":"private remittance"} corridor</label>
-    <select id="corridor-select" name="corridor" autoComplete="off" value={selected} onChange={e=>setSelected(e.target.value)} disabled={corridors.loading||!!corridors.error||available.length===0}>
+    <input name="corridor-filter" className="tx-input" type="search" value={filter} onChange={e=>{setFilter(e.target.value);setSelected("");}} placeholder="Search countries, assets or issuer" aria-label="Filter enabled corridors" autoComplete="off"/><select id="corridor-select" name="corridor" autoComplete="off" value={selected} onChange={e=>setSelected(e.target.value)} disabled={corridors.loading||!!corridors.error||available.length===0}>
      <option value="">Select an enabled corridor</option>
      {available.map(c=><option key={c.id} value={c.id}>{c.origin_country} → {c.destination_country} · {c.asset_code}</option>)}
     </select>

@@ -7,10 +7,11 @@
 [Business](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/business) · [Send](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/send) · [Backend API](https://github.com/stealthbridge-labs/stealthbridge-backend) · [Contracts](https://github.com/stealthbridge-labs/stealthbridge-contracts) · [SDK](https://github.com/stealthbridge-labs/stealthbridge-sdk)
 
 ## Current functionality
-- Animated product landing and two separate Business and Send workspaces.
+- Animated product landing, Business/Send workspaces, and a real read-only transaction explorer at `/explorer`.
 - **Actual Stellar Testnet ledger data** fetched from the configured backend; the backend verifies the RPC network passphrase.
 - **Real operator-configured corridors** fetched from backend PostgreSQL, or explicit unavailable / empty states.
 - Freighter browser wallet public-address connection and Testnet passphrase validation.
+- Transaction hash lookup showing on-chain inclusion/failure without raw XDR or claims of fiat payout.
 - Honest capabilities: fund-moving flows remain disabled until cryptographic integrations are verified.
 - No mock transfers, seeded FX rates, hardcoded countries/partners, or fake balances.
 
