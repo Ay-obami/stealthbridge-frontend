@@ -8,6 +8,19 @@
 
 [Business](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/business) · [Send](https://github.com/stealthbridge-labs/stealthbridge-frontend/tree/main/src/app/send) · [Backend API](https://github.com/stealthbridge-labs/stealthbridge-backend) · [Contracts](https://github.com/stealthbridge-labs/stealthbridge-contracts) · [SDK](https://github.com/stealthbridge-labs/stealthbridge-sdk)
 
+## Deploy the landing page now
+
+**No backend, database, wallet credentials or environment variables are needed.** The site defaults to a polished public landing mode. Business, Send, Explorer and API integration routes remain gated until explicitly enabled for technical previews.
+
+1. Open **[Vercel → New Project](https://vercel.com/new)** and import `stealthbridge-labs/stealthbridge-frontend`.
+2. Framework **Next.js** · Root Directory **`./`** · Node.js **22.x**. Leave the detected build and install commands unchanged.
+3. Click **Deploy**. The homepage becomes available at the HTTPS URL Vercel provides.
+4. Share the resulting address for an actual visual and mobile/browser review.
+
+See the [deployment walkthrough](docs/DEPLOYMENT.md). The default landing state is checked in GitHub Actions using `npm run test:landing` after the Next.js production build.
+
+To enable the work-in-progress routes later, deploy the Rust backend first and configure `STEALTHBRIDGE_SITE_MODE=preview` and the server-only `STEALTHBRIDGE_API_URL=https://your-backend` value in Vercel Project Settings, followed by a redeploy.
+
 ## Current functionality
 - Animated product landing, Business/Send workspaces, and a real read-only transaction explorer at `/explorer`.
 - **Actual Stellar Testnet ledger data** fetched from the configured backend; the backend verifies the RPC network passphrase.
@@ -21,7 +34,7 @@
 
 ## Run locally
 
-Requires Node.js 22+, your own running StealthBridge backend, and public Stellar Testnet RPC connectivity.
+Requires Node.js 22+. The default public landing requires no backend or Stellar RPC access. Preview workspaces require a configured Rust backend.
 
 ```bash
 npm install
@@ -31,7 +44,7 @@ npm run build
 npm run dev
 ```
 
-Frontend server env variable: `STEALTHBRIDGE_API_URL=http://localhost:8080` for local development, or your HTTPS backend URL in hosting. It is server-only; the Next API route allows only `/health`, `/v1/network`, `/v1/capabilities`, `/v1/corridors` and does not forward arbitrary requests.
+For the landing, leave the environment unset. For private technical previews, set `STEALTHBRIDGE_SITE_MODE=preview` and `STEALTHBRIDGE_API_URL=http://localhost:8080` locally, or an HTTPS backend URL on Vercel. The server-side API proxy is read-only and allowlisted. The landing mode returns 404 for its product preview routes and proxy.
 
 ### How data flows
 
