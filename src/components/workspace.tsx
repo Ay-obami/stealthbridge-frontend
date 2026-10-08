@@ -1,14 +1,61 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, CircleDot, LockKeyhole, ShieldCheck, Info } from "lucide-react";
-import { Brand } from "./brand";
-import { Button } from "./ui/button";
+import {useMemo,useState} from "react";
+import {ArrowLeft,ArrowRight,AlertTriangle,CheckCircle2,Database,ExternalLink,Globe2,LockKeyhole,RefreshCw,ShieldCheck} from "lucide-react";
+import {Brand} from "@/components/brand";
+import {WalletConnect} from "@/components/wallet-connect";
+import {useBridge} from "@/hooks/use-bridge";
+import {Button} from "@/components/ui/button";
+import type {PrivacyRail} from "@/lib/bridge-api";
+
 export function Workspace({mode}:{mode:"business"|"send"}){
- const [amount,setAmount]=useState("250");
- const [direction,setDirection]=useState("NG → KE");
  const business=mode==="business";
- const valid=Number.isFinite(Number(amount))&&Number(amount)>0&&Number(amount)<=100000;
- const amountDisplay=valid?new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(amount)):"—";
- return <div className="workspace-page"><header className="workspace-header"><Brand/><span className="network-chip"><i/> Testnet concept</span><Link href="/" className="back-link"><ArrowLeft size={16}/> Back to overview</Link></header><main id="main-content" className="workspace-main"><div className="workspace-intro"><span className="section-index">{business?"StealthBridge Business":"StealthBridge Send"}</span><h1>{business?"Institutional settlements. With discretion.":"Send privately. Across borders."}</h1><p>{business?"A proposed confidential amount-transfer experience for known financial counterparties.":"A proposed private remittance journey using a relationship-shielding protocol."}</p></div><div className="workspace-grid"><section className="form-panel" aria-label="Demo payment configuration"><div className="panel-heading"><div><h2>New testnet simulation</h2><span>Illustrative calculations only</span></div><LockKeyhole size={21}/></div><label className="field">Payment corridor<select name="corridor" autoComplete="off" value={direction} onChange={e=>setDirection(e.target.value)}><option value="NG → KE">Nigeria → Kenya</option><option value="GB → GH">United Kingdom → Ghana</option><option value="US → PH">United States → Philippines</option></select></label><label className="field">Send amount (demo USD)<div className="amount-input"><span>$</span><input name="amount" autoComplete="off" aria-invalid={!valid} inputMode="decimal" type="number" min="1" max="100000" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)} aria-describedby="amount-help"/></div><small id="amount-help">Not a live exchange rate or an executable quote.</small>{!valid&&<span className="validation-error" role="alert">Enter a demo amount between 0 and 100,000 USD.</span>}</label><div className="privacy-choice"><ShieldCheck size={20}/><div><strong>{business?"Confidential amount mode":"Private relationship mode"}</strong><p>{business?"Payment amounts hidden, counterparties visible where supported.":"Private link between payer and recipient where supported."}</p></div></div><div className="summary"><div><span>Demo transfer</span><strong>{amountDisplay}</strong></div><div><span>Settlement rail</span><strong>{business?"Confidential Tokens":"Private Payments"}</strong></div><div><span>Network</span><strong>Stellar Testnet</strong></div><div><span>Status</span><strong>Not submitted</strong></div></div><Button className="w-full" disabled={!valid} onClick={()=>document.getElementById("simulation-info")?.scrollIntoView({behavior:"smooth"})}>Review technical limitations <ArrowRight size={16}/></Button><p className="demo-disclaimer">This preview never signs a transaction, moves money, or contacts a payout provider.</p></section><aside className="insight-panel"><span className="section-index">Settlement visibility</span><h2>Every state tells the truth.</h2><div className="timeline"><div><CircleDot/><div><strong>Quoted</strong><span>FX quote requires a signed, expiring provider response.</span></div></div><div><CircleDot/><div><strong>Authorized</strong><span>Wallet approval and policy checks precede submission.</span></div></div><div><CircleDot/><div><strong>Chain finalized</strong><span>Ledger confirmation is not the same as fiat payout.</span></div></div><div><CheckCircle2/><div><strong>Payout completed</strong><span>Requires independent provider reconciliation.</span></div></div></div><div id="simulation-info" className="insight-note"><Info size={18}/><div><strong>Research preview</strong><p>No live cryptographic integration is claimed. Proof format, asset compatibility, metadata disclosures and recovery paths remain feasibility gates.</p></div></div></aside></div></main><footer className="workspace-footer">StealthBridge © {new Date().getFullYear()} · Public testnet only · No real assets</footer></div>;
+ const rail:PrivacyRail=business?"confidential-token":"private-payments";
+ const {network,corridors,capabilities,refresh}=useBridge();
+ const [selected,setSelected]=useState("");
+ const available=useMemo(()=>corridors.data?.filter(c=>c.privacy_rail===rail)??[],[corridors.data,rail]);
+ const corridor=available.find(c=>c.id===selected)??null;
+ const formatLedgerTime=(raw:string)=>{const n=Number(raw);if(!Number.isFinite(n))return "Unknown";return new Intl.DateTimeFormat(undefined,{dateStyle:"medium",timeStyle:"medium",timeZone:"UTC"}).format(new Date(n*1000))+" UTC";};
+ return <div className="workspace-page">
+ <header className="workspace-header"><Brand/><span className="network-chip"><i/> Stellar Testnet</span><Link href="/" className="back-link"><ArrowLeft size={16} aria-hidden/> Home</Link></header>
+ <main id="main-content" className="workspace-main">
+  <div className="workspace-intro">
+   <span className="section-index">{business?"StealthBridge / Business":"StealthBridge / Send"}</span>
+   <h1>{business?"Confidential settlement, without blind spots.":"Move money, not personal exposure."}</h1>
+   <p>{business?"Privacy for settlement amounts between verified institutional counterparties. Explore eligible corridors and inspect the live Stellar network.":"Relationship-private remittances are being integrated against Stellar Private Payments. No payout or private transfer will be offered until the real rail passes testnet verification."}</p>
+  </div>
+  <div className="workspace-grid">
+   <section className="form-panel" aria-label="Network and corridor availability">
+    <div className="panel-heading"><div><h2>Corridor availability</h2><span>Operator-configured network records only</span></div><Globe2 size={23} aria-hidden/></div>
+    <div className="live-state">
+     <span className="live-label">Stellar RPC observation</span>
+     {network.loading?<p role="status">Checking network…</p>:network.error?<p className="state-error" role="alert"><AlertTriangle size={17} aria-hidden/> {network.error}</p>:network.data?<div className="live-ledger"><strong>Ledger {network.data.ledger_sequence.toLocaleString()}</strong><span>Protocol {network.data.protocol_version} · Closed {formatLedgerTime(network.data.ledger_closed_at_unix)}</span><a href="https://stellar.expert/explorer/testnet" target="_blank" rel="noreferrer">View Testnet explorer <ExternalLink size={14} aria-hidden/></a></div>:null}
+    </div>
+    <label className="field" htmlFor="corridor-select">Available {business?"business":"private remittance"} corridor</label>
+    <select id="corridor-select" name="corridor" autoComplete="off" value={selected} onChange={e=>setSelected(e.target.value)} disabled={corridors.loading||!!corridors.error||available.length===0}>
+     <option value="">Select an enabled corridor</option>
+     {available.map(c=><option key={c.id} value={c.id}>{c.origin_country} → {c.destination_country} · {c.asset_code}</option>)}
+    </select>
+    {corridors.loading?<p className="state-muted" role="status">Loading authorized corridor records…</p>:corridors.error?<p className="state-error" role="alert"><AlertTriangle size={17} aria-hidden/>{corridors.error} No corridor information will be fabricated.</p>:available.length===0?<div className="empty-panel"><Database size={22} aria-hidden/><strong>No configured corridors yet</strong><p>Corridors appear here when operators register and enable real testnet assets and endpoints. Nothing is prefilled.</p></div>:null}
+    {corridor?<div className="corridor-details"><strong>Selected corridor</strong><p>{corridor.origin_country} → {corridor.destination_country} · {corridor.asset_code}</p><p>Privacy rail: {corridor.privacy_rail}</p>{corridor.asset_issuer?<p>Issuer: <code>{corridor.asset_issuer}</code></p>:null}</div>:null}
+    <WalletConnect/>
+    <div className="capability-row"><span>Payment initiation</span><strong>{capabilities.loading?"Checking…":capabilities.error?"Unavailable":capabilities.data?.payments_enabled?"Supported":"Not enabled"}</strong></div>
+    <Button className="w-full" disabled aria-disabled={true}>Transfer unavailable until protocol verification <ArrowRight size={15} aria-hidden/></Button>
+    <p className="demo-disclaimer">No simulated exchange rates, seeded assets, mock settlements, or fictional success statuses are displayed. This screen cannot move funds.</p>
+   </section>
+   <aside className="insight-panel">
+    <span className="section-index">Network transparency</span><h2>Know what the system really supports.</h2>
+    <div className="reliability-list">
+     <div><ShieldCheck size={19} aria-hidden/><div><strong>Privacy primitive</strong><p>{business?"OpenZeppelin Confidential Tokens":"Stellar Private Payments"}</p><span>{capabilities.data?.[business?"confidential_token_verified":"private_payments_verified"]?"Testnet integration verified":"Integration not yet verified"}</span></div></div>
+     <div><LockKeyhole size={19} aria-hidden/><div><strong>Wallet-owned credentials</strong><p>Signing keys remain inside your wallet. This page does not ask for seeds or private proofs.</p></div></div>
+     <div><Globe2 size={19} aria-hidden/><div><strong>Actual network data</strong><p>Ledger information is returned by the backend after verification against Stellar Testnet.</p></div></div>
+     <div><CheckCircle2 size={19} aria-hidden/><div><strong>Fiat settlement</strong><p>{capabilities.data?.fiat_payouts_enabled?"Provider integration supported":"No licensed payout integrations are enabled."}</p></div></div>
+    </div>
+    <Button variant="outline" className="refresh-button" onClick={refresh}><RefreshCw size={16} aria-hidden/> Refresh from backend</Button>
+    <div className="insight-note"><AlertTriangle size={18} aria-hidden/><div><strong>Technical preview</strong><p>A successful network check does not establish protected payment availability. Amount privacy and consumer anonymity require separate verified cryptographic implementations.</p></div></div>
+   </aside>
+  </div>
+ </main>
+ <footer className="workspace-footer">StealthBridge · Testnet integration stage · No real-value payments</footer>
+ </div>;
 }
